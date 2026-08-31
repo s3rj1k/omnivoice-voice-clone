@@ -1,0 +1,43 @@
+# Required. Every key must be present, and commented-out ones are optional.
+
+[engine]
+model = "k2-fsa/OmniVoice"              # checkpoint path or HuggingFace repo id
+device = "mps"                          # or cpu, on Intel Macs and to debug
+dtype = "auto"                          # auto | float32 | float16 | bfloat16
+# attn_implementation = "sdpa"          # or eager, flash_attention_2, flex_attention
+
+[paths]
+voice_dir = "voices"                    # where .voice files are written and looked up
+
+[voice]
+language = "english"                     # name or code, unset lets the model decide
+instruct = "middle-aged, russian accent" # instruct takes at most one each of gender, age, pitch, whisper, and accent
+
+[clone]
+trim_threshold = 20.0                    # only trim references longer than this (seconds)
+trim_max_duration = 15.0                 # length after trimming, cut at the largest gap
+trim_min_duration = 3.0                  # never cut shorter than this
+preprocess = true                        # false keeps the recording raw
+# asr_model = "openai/whisper-small"     # transcription model, default large-v3-turbo
+# asr_device = "cpu"                     # defaults to the [engine] device
+asr_language = "english"                 # language spoken in the recording, unset detects it
+
+[tts]
+num_step = 32                            # decoding steps, more is slower and cleaner
+guidance_scale = 2.0                     # classifier-free guidance, 0 disables it
+speed = 1.0                              # above 1 is faster
+# duration = 3.5                         # fixed output seconds, overriding speed
+seed = 1234                              # reproducible output, per line as seed + index
+position_temperature = 1.1               # the only randomness, 0.0 makes runs identical
+class_temperature = 0.0                  # token values are argmax while this is 0
+
+t_shift = 0.1                            # must be above 0, at 0 every step decodes at once
+layer_penalty_factor = 5.0               # pushes lower codebook layers to unmask first
+denoise = true                           # do not reproduce a noisy reference
+
+postprocess_output = true                # remove long silences, pad and fade run anyway
+pad_duration = 0.1                       # silence on each end in seconds, 0 disables
+fade_duration = 0.1                      # fade in and out in seconds, 0 disables
+
+audio_chunk_threshold = 30.0             # chunk output estimated longer than this
+audio_chunk_duration = 15.0              # size of each chunk in seconds

@@ -1,0 +1,36 @@
+[project]
+name = "omnivoice-voice-clone"
+version = "0.1.0"
+description = "Zero-shot voice cloning built on OmniVoice, for Apple Silicon (Metal)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Unlicense"
+license-files = ["LICENSE"]
+classifiers = [
+    "Operating System :: MacOS :: MacOS X",
+    "Environment :: GPU",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    "omnivoice>=0.2.1",
+    "numpy",
+    "soundfile",
+    "tomli>=2.0; python_version < '3.11'",
+    "torch>=2.4",
+]
+
+[project.scripts]
+voice-clone = "voiceclone.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/voiceclone"]
+
+[dependency-groups]
+dev = ["ruff>=0.11"]
+
+[tool.ruff.lint]
+extend-select = ["I"]
